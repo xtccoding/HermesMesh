@@ -1,0 +1,32 @@
+# Core Dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Messaging & Streaming
+kafka-python>=2.0.2
+nats-py>=2.0.0
+redis>=5.0.1
+
+# Database
+asyncpg>=0.29.0
+sqlalchemy>=2.0.23
+
+# Data Processing
+pandas>=2.2.2
+numpy>=1.24.0
+polars>=0.32.0
+pyarrow>=17.0.0
+
+# Web Scraping
+httpx>=0.25.0
+beautifulsoup4>=4.12.2
+lxml>=4.9.3
+
+# Utilities
+python-dotenv>=1.0.0
+loguru>=0.7.0
+
+# LLM
+openai>=1.0.0

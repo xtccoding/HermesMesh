@@ -1,0 +1,14 @@
+# Scaling Rules
+scaling:
+  # Auto-scaling thresholds
+  scale_up_threshold: 0.8  # Queue utilization %
+  scale_down_threshold: 0.2
+  cooldown_period: 300  # seconds
+  
+  # Instance limits
+  min_total_instances: 10
+  max_total_instances: 200
+  
+  # Health checks
+  health_check_interval: 30
+  unhealthy_threshold: 3

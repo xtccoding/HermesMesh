@@ -1,0 +1,20 @@
+# Ingestion Configuration
+ingestion:
+  max_workers: 10
+  batch_size: 100
+  timeout: 30
+  kafka_topic: hermesmesh-ingestion
+  output_format: json
+  enable_cleaning: true
+  cleaning_threshold: 0.8
+  
+  # Supported data sources
+  sources:
+    - type: html
+      enabled: true
+    - type: pdf
+      enabled: true
+    - type: api
+      enabled: true
+    - type: csv
+      enabled: true

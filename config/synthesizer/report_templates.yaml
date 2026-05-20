@@ -1,0 +1,17 @@
+# Report Templates
+templates:
+  base: professional_quant_report
+  format: markdown
+  
+  sections:
+    - executive_summary
+    - market_analysis
+    - factor_performance
+    - risk_assessment
+    - trading_signals
+    - methodology
+    - appendix
+  
+  # Output settings
+  output_dir: ./reports
+  filename_pattern: 'report_{date}_{market}'

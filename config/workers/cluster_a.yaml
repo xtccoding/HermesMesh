@@ -1,0 +1,15 @@
+# Worker Cluster A Configuration
+cluster_a:
+  max_instances: 50
+  min_instances: 5
+  scaling_factor: 1.5
+  max_queue_size: 1000
+  processing_timeout: 60
+  enable_anomaly_detection: true
+  
+  # Data extraction rules
+  extraction:
+    entities: true
+    metrics: true
+    timestamps: true
+    sentiment: true

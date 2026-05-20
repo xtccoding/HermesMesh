@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+.cache
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+*.csv
+*.xlsx
+*.sqlite
+*.db
+
+# Config files
+config/local/
+config/secrets/
+config/*.local.yaml

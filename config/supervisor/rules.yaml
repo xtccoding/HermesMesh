@@ -1,0 +1,17 @@
+# Supervision Rules
+supervision:
+  enable_debate: true
+  debate_rounds: 3
+  voting_threshold: 0.7
+  
+  alignment_checks:
+    - numeric_verification
+    - logical_consistency
+    - temporal_alignment
+    - source_attribution
+  
+  max_disagreement: 0.3
+  
+  # Convolutional window
+  window_size: 100
+  overlap: 20

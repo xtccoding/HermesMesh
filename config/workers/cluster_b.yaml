@@ -1,0 +1,16 @@
+# Worker Cluster B Configuration
+cluster_b:
+  max_instances: 50
+  min_instances: 5
+  scaling_factor: 1.5
+  max_queue_size: 1000
+  processing_timeout: 60
+  enable_factor_calculation: true
+  
+  # Factor calculation
+  factors:
+    - momentum
+    - volatility
+    - value
+    - quality
+    - growth
