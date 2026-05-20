@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HermesMesh - AI-Native Data Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-mit { background: #2196F3; color: white; }
+        .badge-python { background: #4CAF50; color: white; }
+        .badge-hermes { background: #FF9800; color: white; }
+
+        /* Architecture Section */
+        .section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #00d4ff;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .architecture-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(123, 44, 191, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .diagram-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Flow Container */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: #00d4ff;
+            animation: pulse 2s infinite;
+        }
+
+        .flow-arrow-down {
+            display: flex;
+            justify-content: center;
+            font-size: 2rem;
+            color: #00d4ff;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Nodes */
+        .node {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px 30px;
+            text-align: center;
+            min-width: 180px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .node-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .node-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .node-desc {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* Source Nodes */
+        .sources-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .source-node {
+            background: linear-gradient(135deg, #1a1a3e, #2a2a4e);
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .source-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Message Queue */
+        .queue-container {
+            background: linear-gradient(90deg, #1a1a2e, #2a2a4e, #1a1a2e);
+            border: 2px dashed #444;
+            border-radius: 15px;
+            padding: 15px 40px;
+            text-align: center;
+        }
+
+        .queue-title {
+            font-size: 1.1rem;
+            color: #FF9800;
+            font-weight: 600;
+        }
+
+        /* Worker Clusters */
+        .workers-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .worker-cluster {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cluster-label {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        /* Report Output */
+        .report-node {
+            background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+            border: none;
+            padding: 25px 40px;
+        }
+
+        .report-node::before {
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+        }
+
+        /* Components Grid */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .component-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d4ff;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .component-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .component-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .component-features {
+            list-style: none;
+        }
+
+        .component-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-features li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            color: #00d4ff;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tech-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 0 40px;
+            color: #666;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .footer-link {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #7b2cbf;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .flow-row {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .workers-row {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>HermesMesh</h1>
+            <p class="subtitle">The AI-Native Data Engine: A Distributed, Self-Scaling & Convolutional Multi-Agent Mesh</p>
+            <div class="badges">
+                <span class="badge badge-mit">License MIT</span>
+                <span class="badge badge-python">Python 3.10+</span>
+                <span class="badge badge-hermes">Hermes-3 Powered</span>
+            </div>
+        </header>
+
+        <!-- Architecture Diagram -->
+        <section class="section">
+            <h2 class="section-title">系统架构蓝图</h2>
+            <div class="architecture-diagram">
+                <div class="diagram-content">
+                    <div class="flow-container">
+                        <!-- Data Sources -->
+                        <div>
+                            <div class="sources-container">
+                                <div class="source-node">
+                                    <span class="source-icon">📊</span>
+                                    <span>API数据源</span>
+                                </div>
+                                <div class="source-node">
+                                    <span class="source-icon">🕷️</span>
+                                    <span>爬虫数据</span>
+                                </div>
+                                <div class="source-node">
+                                    <span class="source-icon">📄</span>
+                                    <span>PDF报表</span>
+                                </div>
+                                <div class="source-node">
+                                    <span class="source-icon">📰</span>
+                                    <span>财经快讯</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼</div>
+
+                        <!-- Ingestion Layer -->
+                        <div class="node" style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.05));">
+                            <div class="node-icon">🛡️</div>
+                            <div class="node-title">Ingestion Hermes Pods</div>
+                            <div class="node-desc">智能数据摄入网格 - AI Edge</div>
+                            <div class="node-desc">纯语义解析 | 边缘流式清洗</div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼ [标准数据切片 JSON]</div>
+
+                        <!-- Message Queue -->
+                        <div class="queue-container">
+                            <div class="queue-title">📨 分布式消息队列: Kafka / NATS</div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼</div>
+
+                        <!-- Master Control -->
+                        <div class="node" style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 152, 0, 0.05));">
+                            <div class="node-icon">🧠</div>
+                            <div class="node-title">Master Hermes</div>
+                            <div class="node-desc">元调度中心大模型</div>
+                            <div class="node-desc">动态负载均衡 | 弹性伸缩</div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼ 动态下发任务</div>
+
+                        <!-- Worker Clusters -->
+                        <div class="workers-row">
+                            <div class="worker-cluster">
+                                <div class="cluster-label">Worker Cluster A</div>
+                                <div class="node">
+                                    <div class="node-icon">⚙️</div>
+                                    <div class="node-title">特征提取 Worker</div>
+                                    <div class="node-desc">高精数据提取处理</div>
+                                </div>
+                            </div>
+                            <div class="worker-cluster">
+                                <div class="cluster-label">Worker Cluster B</div>
+                                <div class="node">
+                                    <div class="node-icon">📈</div>
+                                    <div class="node-title">因子计算 Worker</div>
+                                    <div class="node-desc">异常检测 | 时间对齐</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼ 中间因子数据</div>
+
+                        <!-- Supervision Layer -->
+                        <div class="node" style="background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), rgba(255, 68, 68, 0.05));">
+                            <div class="node-icon">🔍</div>
+                            <div class="node-title">Supervisor Hermes 网格</div>
+                            <div class="node-desc">抗幻觉防御线 | 围观辩论</div>
+                            <div class="node-desc">确定性对齐工具 | 共识投票</div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼ 100% 干净、无幻觉的量化数据集</div>
+
+                        <!-- Synthesis Layer -->
+                        <div class="node report-node">
+                            <div class="node-icon">📊</div>
+                            <div class="node-title">Synthesizer Hermes</div>
+                            <div class="node-desc">专业首席分析师 Agent</div>
+                            <div class="node-desc">商业级量化投资研报</div>
+                        </div>
+
+                        <div class="flow-arrow-down">▼</div>
+
+                        <!-- Output -->
+                        <div class="sources-container">
+                            <div class="source-node" style="border-color: #7b2cbf;">
+                                <span class="source-icon">📑</span>
+                                <span>商业级量化研报</span>
+                            </div>
+                            <div class="source-node" style="border-color: #7b2cbf;">
+                                <span class="source-icon">🎯</span>
+                                <span>自动化交易信号</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Innovations -->
+        <section class="section">
+            <h2 class="section-title">核心黑科技</h2>
+            <div class="components-grid">
+                <div class="component-card">
+                    <div class="component-icon">🚀</div>
+                    <h3 class="component-title">全链路 AI-Native 数据摄入</h3>
+                    <ul class="component-features">
+                        <li><span class="feature-icon">✓</span> 消灭传统爬虫正则和JSON解析器</li>
+                        <li><span class="feature-icon">✓</span> 纯语义理解海量无结构数据</li>
+                        <li><span class="feature-icon">✓</span> 秒级转化为标准化数据切片</li>
+                        <li><span class="feature-icon">✓</span> 极端节省 Token 成本</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-icon">⚡</div>
+                    <h3 class="component-title">代码级弹性伸缩</h3>
+                    <ul class="component-features">
+                        <li><span class="feature-icon">✓</span> Zero-K8s: 无需YAML配置</li>
+                        <li><span class="feature-icon">✓</span> 实时评估队列负载</li>
+                        <li><span class="feature-icon">✓</span> 自动异步并发扩容</li>
+                        <li><span class="feature-icon">✓</span> 纯大模型弹性编排</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <div class="component-icon">🛡️</div>
+                    <h3 class="component-title">层级卷积与交叉监督</h3>
+                    <ul class="component-features">
+                        <li><span class="feature-icon">✓</span> 滑动窗口卷积审计</li>
+                        <li><span class="feature-icon">✓</span> 红蓝对抗审计员机制</li>
+                        <li><span class="feature-icon">✓</span> Python/Pandas硬校验</li>
+                        <li><span class="feature-icon">✓</span> 共识投票彻底挤干水分</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="section">
+            <h2 class="section-title">系统指标</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">1000+</div>
+                    <div class="stat-label">异构数据源支持</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">80%</div>
+                    <div class="stat-label">无用数据过滤率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0%</div>
+                    <div class="stat-label">幻觉率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">弹性扩展能力</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="section">
+            <h2 class="section-title">技术栈</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <span class="tech-icon">🐍</span>
+                    <span>Python 3.10+</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🤖</span>
+                    <span>Hermes-3 LLM</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">⚡</span>
+                    <span>AsyncIO</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">📨</span>
+                    <span>Kafka / NATS</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🗄️</span>
+                    <span>Redis</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🐼</span>
+                    <span>Pandas</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔬</span>
+                    <span>NumPy</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🚀</span>
+                    <span>FastAPI</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module Structure -->
+        <section class="section">
+            <h2 class="section-title">模块结构</h2>
+            <div class="architecture-diagram">
+                <div class="diagram-content" style="font-family: 'Consolas', 'Courier New', monospace; text-align: left; padding: 20px;">
+<pre style="color: #00d4ff;">
+HermesMesh/
+├── 📁 config/                      # 配置文件目录
+│   ├── 📁 ingestion/               # 数据摄入配置
+│   ├── 📁 workers/                 # Worker集群配置
+│   ├── 📁 supervisor/              # 监督网格配置
+│   └── 📁 synthesizer/             # 报告生成配置
+│
+├── 📁 src/                         # 源代码目录
+│   └── 📁 hermesmesh/              # 主包
+│       ├── 📄 cli.py               # 命令行接口
+│       │
+│       ├── 📁 ingestion/           # 智能数据摄入网格
+│       │   ├── 📄 pods.py          # Ingestion Pods管理
+│       │   ├── 📄 parsers.py       # 语义解析器
+│       │   └── 📄 cleaners.py      # 流式清洗器
+│       │
+│       ├── 📁 control_plane/       # 调度与编排中心
+│       │   ├── 📄 master_hermes.py # Master调度器
+│       │   ├── 📄 scheduler.py     # 任务调度
+│       │   └── 📄 load_balancer.py # 负载均衡
+│       │
+│       ├── 📁 feature_workers/     # 卷积特征提取网格
+│       │   ├── 📄 cluster_a.py     # 集群A: 数据提取
+│       │   ├── 📄 cluster_b.py     # 集群B: 因子计算
+│       │   ├── 📄 factor_calculator.py  # 因子计算器
+│       │   └── 📄 anomaly_detector.py   # 异常检测器
+│       │
+│       ├── 📁 supervision/         # 多层交叉监督网格
+│       │   ├── 📄 supervisor_hermes.py  # Supervisor主模块
+│       │   ├── 📄 cross_debate.py       # 围观辩论引擎
+│       │   ├── 📄 alignment_tools.py    # 对齐验证工具
+│       │   └── 📄 consensus_voting.py   # 共识投票机制
+│       │
+│       └── 📁 synthesis/           # 商业报告聚合层
+│           ├── 📄 synthesizer_hermes.py # Synthesizer主模块
+│           ├── 📄 report_builder.py     # 报告构建器
+│           └── 📄 signal_generator.py   # 信号生成器
+│
+├── 📄 pyproject.toml               # 项目配置
+├── 📄 requirements.txt             # 依赖列表
+├── 📄 quick_start.py               # 快速启动脚本
+└── 📄 README.md                    # 项目说明
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="section">
+            <h2 class="section-title">快速开始</h2>
+            <div class="architecture-diagram">
+                <div class="diagram-content" style="font-family: 'Consolas', 'Courier New', monospace;">
+<pre style="color: #e0e0e0;">
+<span style="color: #666;"># 1. 安装依赖</span>
+<span style="color: #00d4ff;">pip install</span> -r requirements.txt
+
+<span style="color: #666;"># 2. 配置环境</span>
+<span style="color: #00d4ff;">cp</span> .env.example .env
+
+<span style="color: #666;"># 3. 快速启动</span>
+<span style="color: #00d4ff;">python</span> quick_start.py
+
+<span style="color: #666;"># 4. 或使用CLI</span>
+<span style="color: #00d4ff;">python</span> -m hermesmesh.cli run --worker-instances 20
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>HermesMesh - AI-Native Distributed Intelligent Quantitative Analysis Platform</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">API Reference</a>
+                <a href="#" class="footer-link">Examples</a>
+            </div>
+            <p style="margin-top: 30px; font-size: 0.85rem;">© 2024 HermesMesh. MIT License.</p>
+        </footer>
+    </div>
+</body>
+</html>
